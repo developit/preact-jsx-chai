@@ -16,7 +16,7 @@ Extend Chai with support for asserting JSX equality & contents with support for 
 ```js
 import { h } from 'preact'; /** @jsx h */
 
-import chai from 'chai';
+import { expect, default as chai } from 'chai';
 import assertJsx from 'preact-jsx-chai';
 chai.use(assertJsx);
 
@@ -35,10 +35,17 @@ expect(
 );
 ```
 
+> **Note:** in environments like Karma where chai is available as a global, `preact-jsx-chai` will automatically register itself on import. Don't worry, though, this plugin is smart enough to avoid registering itself multiple times.
 
-### Testing Components
+
+### Testing (Preact) Components
+
+Assertions are supported for both functional and classical components.
+
+Typically, JSX assertions follow a pattern where the component to be tested is passed to `expect()` with any props necessary, and the expected DOM state is passed to `.eql()` (or its alias `.deep.equal()`):
 
 ```js
+// Supports both functional and classical components
 const Link = ({ url, text }) => (
 	<a class="link" href={'/'+href}>Link: { text }</a>
 );
