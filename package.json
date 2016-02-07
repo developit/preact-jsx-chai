@@ -31,7 +31,7 @@
     "chai": "^3.3.0",
     "eslint": "^1.7.1",
     "mocha": "^2.3.3",
-    "preact": "^2.6.1"
+    "preact": "^3.2.0"
   },
   "dependencies": {
     "preact-render-to-string": "^1.4.1"
