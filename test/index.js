@@ -1,5 +1,5 @@
 import { default as assertJsx, options } from '../src';
-import { h } from 'preact';
+import { h, Component } from 'preact';
 import { expect, default as chai } from 'chai';
 chai.use(assertJsx);
 /**@jsx h */
@@ -28,6 +28,25 @@ describe('preact-jsx-chai', () => {
 					attributes: undefined,
 					children: undefined
 				});
+			});
+		});
+
+		describe('components', () => {
+			it('should compare single-level components', () => {
+				class EmptyButton extends Component {
+					render(props) { return <button {...props} />; }
+				}
+				expect(<EmptyButton />).to.eql(<button />);
+				expect(<EmptyButton foo="bar" />).to.eql(<button foo="bar" />);
+			});
+
+			it('should compare components with children', () => {
+				class Button extends Component {
+					render(props) { return <button {...props}>{props.children}</button>; }
+				}
+				expect(<Button />).to.eql(<button />);
+				expect(<Button foo="bar" />).to.eql(<button foo="bar" />);
+				expect(<Button>text</Button>).to.eql(<button>text</button>);
 			});
 		});
 	});
