@@ -11,7 +11,10 @@ export const options = {};
 let msg = act => `expected #{act} to ${act} #{exp}`;
 
 // assert that an object is JSX (or more correctly, a VNode)
-let isJsx = obj => obj && options.isJsx ? options.isJsx(obj) : obj.__isVNode;
+let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj.__isVNode || isVNode(obj)));
+
+// does it look like a vnode?
+let isVNode = obj => obj.hasOwnProperty('nodeName') && obj.hasOwnProperty('attributes') && obj.hasOwnProperty('children') && obj.constructor.name==='VNode';
 
 // inject a chai assertion if the values being tested are JSX VNodes
 let ifJsx = (fn, opts) => next => function(jsx, ...args) {
