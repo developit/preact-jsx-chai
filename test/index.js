@@ -67,7 +67,7 @@ describe('preact-jsx-chai', () => {
 			let counter = 0;
 			const Outer = () => <Inner b="b" />;
 			const Inner = ({ b }) => <span b1={b}>{++counter}</span>;
-			expect(<Outer a />).to.equal(<Outer b />);
+			expect(<Outer a />).to.equal(<Inner b="b" />);
 		});
 
 		it('should render deeply for .eql() / .deep.equal()', () => {
@@ -75,6 +75,7 @@ describe('preact-jsx-chai', () => {
 			let counter = 0;
 			const Outer = () => <Inner b="b" />;
 			const Inner = ({ b }) => <span b1={b}>{++counter}</span>;
+			expect(<Outer />).to.eql(<span b1="b">1</span>);
 			expect(<Outer a />).not.to.eql(<Outer b />);
 		});
 	});
