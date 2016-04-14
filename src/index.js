@@ -7,6 +7,17 @@ import render from 'preact-render-to-string';
  */
 export const options = {};
 
+// options to pass to renderToString() when doing a deep comparison
+const RENDER_OPTS = {
+	sortAttributes: true
+};
+
+// options to pass to renderToString() when doing a shallow comparison
+const SHALLOW_OPTS = {
+	sortAttributes: true,
+	shallow: true
+};
+
 // create an assertion template string for the given action
 let msg = act => `expected #{act} to ${act} #{exp}`;
 
@@ -19,8 +30,8 @@ let isVNode = obj => obj.hasOwnProperty('nodeName') && obj.hasOwnProperty('attri
 // inject a chai assertion if the values being tested are JSX VNodes
 let ifJsx = (fn, opts) => next => function(jsx, ...args) {
 	if (!isJsx(this._obj)) return next.call(this, jsx, ...args);
-	let expected = render(jsx, opts).trim();
-	let actual = render(this._obj, opts).trim();
+	let expected = render(jsx, null, opts).trim();
+	let actual = render(this._obj, null, opts).trim();
 	return fn(this, { expected, actual, jsx });
 };
 
@@ -39,11 +50,11 @@ export default function assertJsx({ Assertion }) {
 	if (Assertion.__assertJsxMounted===true) return;
 	Assertion.__assertJsxMounted = true;
 
-	Assertion.overwriteMethod('eql', ifJsx(equal));
-	Assertion.overwriteMethod('eqls', ifJsx(equal));
+	Assertion.overwriteMethod('eql', ifJsx(equal, RENDER_OPTS));
+	Assertion.overwriteMethod('eqls', ifJsx(equal, RENDER_OPTS));
 
-	Assertion.overwriteMethod('equal', ifJsx(equal, { shallow:true }));
-	Assertion.overwriteMethod('equals', ifJsx(equal, { shallow:true }));
+	Assertion.overwriteMethod('equal', ifJsx(equal, SHALLOW_OPTS));
+	Assertion.overwriteMethod('equals', ifJsx(equal, SHALLOW_OPTS));
 
 
 	['include', 'includes', 'contain', 'contains'].forEach( method => {
