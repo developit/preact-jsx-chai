@@ -60,4 +60,22 @@ describe('preact-jsx-chai', () => {
 			// @TODO
 		});
 	});
+
+	describe('shallow', () => {
+		it('should render shallow for .equal()', () => {
+			// example component that, if rendered, would never be equal
+			let counter = 0;
+			const Outer = () => <Inner b="b" />;
+			const Inner = ({ b }) => <span b1={b}>{++counter}</span>;
+			expect(<Outer a />).to.equal(<Outer b />);
+		});
+
+		it('should render deeply for .eql() / .deep.equal()', () => {
+			// example component that, if rendered, would never be equal
+			let counter = 0;
+			const Outer = () => <Inner b="b" />;
+			const Inner = ({ b }) => <span b1={b}>{++counter}</span>;
+			expect(<Outer a />).not.to.eql(<Outer b />);
+		});
+	});
 });
