@@ -18,6 +18,13 @@ const SHALLOW_OPTS = {
 	shallow: true
 };
 
+// for shallow comparisons, the "expected" value should NOT have high order components resolved at the root
+const SHALLOW_OPTS_EXPECTED = {
+	sortAttributes: true,
+	shallow: true,
+	renderRootComponent: false
+};
+
 // create an assertion template string for the given action
 let msg = act => `expected #{act} to ${act} #{exp}`;
 
@@ -28,10 +35,10 @@ let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj.__isVNode |
 let isVNode = obj => obj.hasOwnProperty('nodeName') && obj.hasOwnProperty('attributes') && obj.hasOwnProperty('children') && obj.constructor.name==='VNode';
 
 // inject a chai assertion if the values being tested are JSX VNodes
-let ifJsx = (fn, opts) => next => function(jsx, ...args) {
+let ifJsx = (fn, opts, optsExpected) => next => function(jsx, ...args) {
 	if (!isJsx(this._obj)) return next.call(this, jsx, ...args);
-	let expected = render(jsx, null, opts).trim();
 	let actual = render(this._obj, null, opts).trim();
+	let expected = render(jsx, null, optsExpected || opts).trim();
 	return fn(this, { expected, actual, jsx });
 };
 
@@ -53,8 +60,8 @@ export default function assertJsx({ Assertion }) {
 	Assertion.overwriteMethod('eql', ifJsx(equal, RENDER_OPTS));
 	Assertion.overwriteMethod('eqls', ifJsx(equal, RENDER_OPTS));
 
-	Assertion.overwriteMethod('equal', ifJsx(equal, SHALLOW_OPTS));
-	Assertion.overwriteMethod('equals', ifJsx(equal, SHALLOW_OPTS));
+	Assertion.overwriteMethod('equal', ifJsx(equal, SHALLOW_OPTS, SHALLOW_OPTS_EXPECTED));
+	Assertion.overwriteMethod('equals', ifJsx(equal, SHALLOW_OPTS, SHALLOW_OPTS_EXPECTED));
 
 
 	['include', 'includes', 'contain', 'contains'].forEach( method => {
