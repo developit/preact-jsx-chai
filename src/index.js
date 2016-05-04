@@ -9,19 +9,19 @@ export const options = {};
 
 // options to pass to renderToString() when doing a deep comparison
 const RENDER_OPTS = {
-	sortAttributes: true
+	sortAttributes: true,
+	pretty: true
 };
 
 // options to pass to renderToString() when doing a shallow comparison
 const SHALLOW_OPTS = {
-	sortAttributes: true,
+	...RENDER_OPTS,
 	shallow: true
 };
 
 // for shallow comparisons, the "expected" value should NOT have high order components resolved at the root
 const SHALLOW_OPTS_EXPECTED = {
-	sortAttributes: true,
-	shallow: true,
+	...SHALLOW_OPTS,
 	renderRootComponent: false
 };
 
