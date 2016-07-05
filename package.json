@@ -27,14 +27,14 @@
   "homepage": "https://github.com/developit/preact-jsx-chai",
   "devDependencies": {
     "babel": "^5.8.23",
-    "babel-eslint": "^6.0.0",
+    "babel-eslint": "^6.1.0",
     "chai": "^3.3.0",
-    "eslint": "^3.0.0",
-    "eslint-plugin-react": "^5.0.0",
-    "mocha": "^2.3.3",
-    "preact": "^4.1.1"
+    "eslint": "^3.0.1",
+    "eslint-plugin-react": "^5.2.2",
+    "mocha": "^2.5.3",
+    "preact": "^4.8.0"
   },
   "dependencies": {
-    "preact-render-to-string": "^2.5.0"
+    "preact-render-to-string": "^2.6.1"
   }
 }
