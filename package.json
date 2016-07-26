@@ -36,5 +36,11 @@
   },
   "dependencies": {
     "preact-render-to-string": "^2.6.1"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "babel",
+      "babel-core"
+    ]
   }
 }
