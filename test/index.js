@@ -78,5 +78,17 @@ describe('preact-jsx-chai', () => {
 			expect(<Outer />).to.eql(<span b1="b">1</span>);
 			expect(<Outer a />).not.to.eql(<Outer b />);
 		});
+
+		it('should shallow-compare components with complex props', () => {
+			let counter = 0;
+			const Outer = () => <Inner b={['a','b','c']} c={{ foo:'bar' }} />;
+			const Inner = ({ b }) => <span b1={b+''}>{++counter}</span>;
+			expect(<Outer a />).to.equal(<Inner b={['a','b','c']} c={{ foo:'bar' }} />);
+
+			// make sure inequality within an attribute generates a failed assertion:
+			expect( () => {
+				expect(<Outer a />).to.equal(<Inner b={['a','c','c']} c={{ foo:'bar' }} />);
+			}).to.throw(/"b".*?"c"/);	// really loose here, but it would fail if the assertion stopped working
+		});
 	});
 });

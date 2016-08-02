@@ -10,6 +10,8 @@ export const options = {};
 // options to pass to renderToString() when doing a deep comparison
 const RENDER_OPTS = {
 	sortAttributes: true,
+	xml: true,
+	jsx: true,
 	pretty: true
 };
 
