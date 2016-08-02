@@ -1,6 +1,6 @@
 {
   "name": "preact-jsx-chai",
-  "version": "1.6.1",
+  "version": "2.0.0",
   "description": "Extend Chai with support for asserting JSX equality & contents.",
   "main": "dist/index.js",
   "scripts": {
