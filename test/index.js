@@ -29,6 +29,10 @@ describe('preact-jsx-chai', () => {
 					children: undefined
 				});
 			});
+
+			it('should sort attributes', () => {
+				expect(<jsx a="a" b="b" c="c" />).to.eql(<jsx c="c" b="b" a="a" />);
+			});
 		});
 
 		describe('components', () => {

@@ -1,4 +1,4 @@
-import render from 'preact-render-to-string';
+import render from 'preact-render-to-string/jsx';
 
 /*global chai*/
 
@@ -9,10 +9,7 @@ export const options = {};
 
 // options to pass to renderToString() when doing a deep comparison
 const RENDER_OPTS = {
-	sortAttributes: true,
-	xml: true,
-	jsx: true,
-	pretty: true
+	sortAttributes: true
 };
 
 // options to pass to renderToString() when doing a shallow comparison
