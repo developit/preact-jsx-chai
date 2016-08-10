@@ -9,7 +9,8 @@ export const options = {};
 
 // options to pass to renderToString() when doing a deep comparison
 const RENDER_OPTS = {
-	sortAttributes: true
+	sortAttributes: true,
+	pretty: false
 };
 
 // options to pass to renderToString() when doing a shallow comparison
@@ -64,7 +65,7 @@ export default function assertJsx({ Assertion }) {
 
 
 	['include', 'includes', 'contain', 'contains'].forEach( method => {
-		Assertion.overwriteChainableMethod(method, ifJsx(include), through);
+		Assertion.overwriteChainableMethod(method, ifJsx(include, RENDER_OPTS), through);
 	});
 }
 
