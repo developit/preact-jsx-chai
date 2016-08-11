@@ -24,6 +24,12 @@ const SHALLOW_OPTS_EXPECTED = {
 	renderRootComponent: false
 };
 
+// for "includes" and "contains", pretty-print the diff but not the version that gets compared
+const INCLUDE_RENDER_OPTS = {
+	...RENDER_OPTS,
+	pretty: false
+};
+
 // create an assertion template string for the given action
 let msg = act => `expected #{act} to ${act} #{exp}`;
 
@@ -34,21 +40,23 @@ let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj.__isVNode |
 let isVNode = obj => obj.hasOwnProperty('nodeName') && obj.hasOwnProperty('attributes') && obj.hasOwnProperty('children') && obj.constructor.name==='VNode';
 
 // inject a chai assertion if the values being tested are JSX VNodes
-let ifJsx = (fn, opts, optsExpected) => next => function(jsx, ...args) {
+let ifJsx = (fn, opts, optsExpected, displayOpts) => next => function(jsx, ...args) {
 	if (!isJsx(this._obj)) return next.call(this, jsx, ...args);
 	let actual = render(this._obj, null, opts).trim();
 	let expected = render(jsx, null, optsExpected || opts).trim();
-	return fn(this, { expected, actual, jsx });
+	let diffActual = displayOpts ? render(this._obj, null, displayOpts).trim() : actual;
+	let diffExpected = displayOpts ? render(jsx, null, displayOpts).trim() : expected;
+	return fn(this, { expected, actual, diffActual, diffExpected, jsx });
 };
 
 // create a passthrough function
 let through = next => function(...args) { return next.call(this, ...args); };
 
 // assert that a String is equal to the given string
-let equal = (a, { expected, actual }) => a.assert(actual===expected, msg('equal'), msg('not equal'), expected, actual, true);
+let equal = (a, { expected, actual, diffExpected, diffActual }) => a.assert(actual===expected, msg('equal'), msg('not equal'), diffExpected, diffActual, true);
 
 // assert that a String contains the given string
-let include = (a, { expected, actual }) => a.assert(~actual.indexOf(expected), msg('include'), msg('not include'), expected, actual, true);
+let include = (a, { expected, actual, diffExpected, diffActual }) => a.assert(~actual.indexOf(expected), msg('include'), msg('not include'), diffExpected, diffActual, true);
 
 
 /** Middleware: pass to `chai.use()` to add JSX assertion support. */
@@ -62,9 +70,8 @@ export default function assertJsx({ Assertion }) {
 	Assertion.overwriteMethod('equal', ifJsx(equal, SHALLOW_OPTS, SHALLOW_OPTS_EXPECTED));
 	Assertion.overwriteMethod('equals', ifJsx(equal, SHALLOW_OPTS, SHALLOW_OPTS_EXPECTED));
 
-
 	['include', 'includes', 'contain', 'contains'].forEach( method => {
-		Assertion.overwriteChainableMethod(method, ifJsx(include), through);
+		Assertion.overwriteChainableMethod(method, ifJsx(include, INCLUDE_RENDER_OPTS, INCLUDE_RENDER_OPTS, RENDER_OPTS), through);
 	});
 }
 
