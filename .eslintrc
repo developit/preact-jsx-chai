@@ -17,7 +17,8 @@
   },
   "globals": {
     "sinon": true,
-    "expect": true
+    "expect": true,
+    "chai": true
   },
   "rules": {
     "react/jsx-uses-react": 2,

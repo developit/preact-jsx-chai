@@ -16,7 +16,7 @@ Extend Chai with support for asserting JSX equality & contents with support for 
 ```js
 import { h } from 'preact'; /** @jsx h */
 
-import { expect, default as chai } from 'chai';
+import chai, { expect } from 'chai';
 import assertJsx from 'preact-jsx-chai';
 chai.use(assertJsx);
 

@@ -1,7 +1,5 @@
 import render from 'preact-render-to-string/jsx';
 
-/*global chai*/
-
 /** Options for all assertions.
  *	@property {function} isJsx A test to see if the given parameter is a JSX VNode. Defaults to checking for the existence of an __isVNode property
  */
