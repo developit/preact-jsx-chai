@@ -1,9 +1,14 @@
 import render from 'preact-render-to-string/jsx';
 
 /** Options for all assertions.
- *	@property {function} isJsx A test to see if the given parameter is a JSX VNode. Defaults to checking for the existence of an __isVNode property
+ *	@property {function} isJsx					A test to see if the given parameter is a JSX VNode. Defaults to checking for the existence of an __isVNode property
  */
-export const options = {};
+export const options = {
+	/* If `false`, props with function values will be omitted from the comparison entirely */
+	functions: true,
+	/* If `false`, ignores function names and bound state, asserting only that the compared attributes are functions */
+	functionNames: true
+};
 
 // options to pass to renderToString() when doing a deep comparison
 const RENDER_OPTS = {
@@ -37,13 +42,20 @@ let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj.__isVNode |
 // does it look like a vnode?
 let isVNode = obj => obj.hasOwnProperty('nodeName') && obj.hasOwnProperty('attributes') && obj.hasOwnProperty('children') && obj.constructor.name==='VNode';
 
+// inject default options and invoke render with no context
+let doRender = (jsx, opts) => render(jsx, null, {
+	functions: options.functions,
+	functionNames: options.functionNames,
+	...opts
+});
+
 // inject a chai assertion if the values being tested are JSX VNodes
 let ifJsx = (fn, opts, optsExpected, displayOpts) => next => function(jsx, ...args) {
 	if (!isJsx(this._obj)) return next.call(this, jsx, ...args);
-	let actual = render(this._obj, null, opts).trim();
-	let expected = render(jsx, null, optsExpected || opts).trim();
-	let diffActual = displayOpts ? render(this._obj, null, displayOpts).trim() : actual;
-	let diffExpected = displayOpts ? render(jsx, null, displayOpts).trim() : expected;
+	let actual = doRender(this._obj, opts).trim();
+	let expected = doRender(jsx, optsExpected || opts).trim();
+	let diffActual = displayOpts ? doRender(this._obj, displayOpts).trim() : actual;
+	let diffExpected = displayOpts ? doRender(jsx, displayOpts).trim() : expected;
 	return fn(this, { expected, actual, diffActual, diffExpected, jsx });
 };
 
@@ -73,6 +85,7 @@ export default function assertJsx({ Assertion }) {
 	});
 }
 
+assertJsx.options = options;
 
 // auto-mount if possible
 if (typeof chai!=='undefined' && chai.use) chai.use(assertJsx);

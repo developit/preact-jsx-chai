@@ -1,4 +1,4 @@
-import { default as assertJsx, options } from '../src';
+import assertJsx, { options } from '../src';
 import { h, Component } from 'preact';
 import { expect, default as chai } from 'chai';
 chai.use(assertJsx);
@@ -55,16 +55,6 @@ describe('preact-jsx-chai', () => {
 		});
 	});
 
-	describe('options', () => {
-		it('should be an object', () => {
-			expect(options).to.be.an('object');
-		});
-
-		xit('should support isJsx()', () => {
-			// @TODO
-		});
-	});
-
 	describe('shallow', () => {
 		it('should render shallow for .equal()', () => {
 			// example component that, if rendered, would never be equal
@@ -93,6 +83,58 @@ describe('preact-jsx-chai', () => {
 			expect( () => {
 				expect(<Outer a />).to.equal(<Inner b={['a','c','c']} c={{ foo:'bar' }} />);
 			}).to.throw(/"b".*?"c"/);	// really loose here, but it would fail if the assertion stopped working
+		});
+	});
+
+	describe('options', () => {
+		it('should be an object', () => {
+			expect(options).to.be.an('object');
+		});
+
+		xit('should support isJsx()', () => {
+			// @TODO
+		});
+
+		it('should ignore functions when functions=false', () => {
+			let before = options.functions;
+			options.functions = false;
+
+			expect(<div onClick={() => {}} />).to.eql(<div />);
+			expect(<div onClick={() => {}} />).to.equal(<div />);
+
+			expect(<div />).to.eql(<div onClick={() => {}} />);
+			expect(<div />).to.equal(<div onClick={() => {}} />);
+
+			expect(<div onClick={() => {}} />).to.eql(<div onClick={function foo(){}} />);
+			expect(<div onClick={() => {}} />).to.equal(<div onClick={function foo(){}} />);
+
+			options.functions = before;
+		});
+
+		it('should ignore function names and bound state when functionNames=false', () => {
+			let before = options.functionNames;
+			options.functionNames = false;
+
+			expect( () => {
+				expect(<div onClick={function foo(){}} />).to.eql(<div />);
+			}).to.throw(/onClick={Function}/);
+
+			expect( () => {
+				expect(<div onClick={() => {}} />).to.equal(<div />);
+			}).to.throw(/onClick={Function}/);
+
+			expect( () => {
+				expect(<div />).to.eql(<div onClick={() => {}} />);
+			}).to.throw(/Function/);
+
+			expect( () => {
+				expect(<div />).to.equal(<div onClick={() => {}} />);
+			}).to.throw(/Function/);
+
+			expect(<div onClick={() => {}} />).to.eql(<div onClick={function foo(){}} />);
+			expect(<div onClick={() => {}} />).to.equal(<div onClick={function foo(){}} />);
+
+			options.functionNames = before;
 		});
 	});
 });

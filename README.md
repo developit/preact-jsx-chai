@@ -38,7 +38,38 @@ expect(
 > **Note:** in environments like Karma where chai is available as a global, `preact-jsx-chai` will automatically register itself on import. Don't worry, though, this plugin is smart enough to avoid registering itself multiple times.
 
 
-### Testing (Preact) Components
+---
+
+
+### Options
+
+There are a few global options available to customize how `preact-jsx-chai` asserts over VNodes.
+
+
+| Name            | Type     | Default | Description
+|-----------------|----------|---------|-------------
+| `isJsx`         | Function | _auto_  | Override the detection of values as being JSX VNodes.
+| `functions`     | Boolean  | _true_  | If `false`, props with function values will be omitted from the comparison entirely
+| `functionNames` | Boolean  | _true_  | If `false`, ignores function names and bound state, asserting only that the compared props are functions
+
+
+##### To set these options:
+
+```js
+import { options } from 'preact-jsx-chai';
+options.functions = false;
+
+// or:
+
+import jsxChai from 'preact-jsx-chai';
+jsxChai.options.functions = false;
+```
+
+
+---
+
+
+### Testing Preact Components
 
 Assertions are supported for both functional and classical components.
 
