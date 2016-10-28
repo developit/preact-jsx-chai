@@ -29,7 +29,7 @@
     "babel": "^5.8.23",
     "babel-eslint": "^6.1.2",
     "chai": "^3.3.0",
-    "eslint": "^3.2.2",
+    "eslint": "^3.9.0",
     "eslint-plugin-react": "^6.0.0",
     "mocha": "^3.0.0",
     "preact": "^6.1.0"
