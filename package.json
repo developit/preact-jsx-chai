@@ -3,6 +3,7 @@
   "version": "2.2.1",
   "description": "Extend Chai with support for asserting JSX equality & contents.",
   "main": "dist/index.js",
+  "typings": "src/index.d.ts",
   "scripts": {
     "build": "babel src -s inline -d dist",
     "test": "eslint {src,test} && mocha --compilers js:babel/register test/**/*.js",
