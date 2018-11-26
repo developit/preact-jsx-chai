@@ -146,7 +146,6 @@ describe('preact-jsx-chai', () => {
 		it('should ignore functions when functions=false', () => {
 			let before = options.functions;
 			options.functions = false;
-			console.log("Options in test is", options);
 
 			expect(<div onClick={() => {}} />).to.eql(<div />);
 			expect(<div onClick={() => {}} />).to.equal(<div />);
