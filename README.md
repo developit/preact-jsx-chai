@@ -70,26 +70,44 @@ jsxChai.options.functions = false;
 
 ---
 
+### Assertions
 
-### Testing Preact Components
+Deep, fully rendered equality/inclusion is checked for: `.deep.equal`, `.eql`, `.include`, and `.contain`
 
-Assertions are supported for both functional and classical components.
-
-Typically, JSX assertions follow a pattern where the component to be tested is passed to `expect()` with any props necessary, and the expected DOM state is passed to `.eql()` (or its alias `.deep.equal()`):
+Shallow, JSX only equality/inclusion is checked for: `.equal`, `.shallow.include`, and `.shallow.contain`
 
 ```js
-// Supports both functional and classical components
-const Link = ({ url, text }) => (
-	<a class="link" href={'/'+href}>Link: { text }</a>
-);
+let Outer = ({a}) => <Inner a={a}/>
+let Innter = ({a}) => <div>{a}</div>
 
-expect(
-	<Link url="?foo" text="foo" />
-).to.eql(
-	<a href="/?foo">Link: foo</a>
-);
+// JSX tests
+expect(<Outer />).to.be.jsx
+expect('Outer').to.not.be.jsx
+
+// Deep equality tests
+expect(<Outer a="foo"/>).to.deep.equal(<Inner a="foo" notRenderedProp="x" />)
+expect(<Outer a="foo"/>).to.deep.equal(<div>foo</div>/>)
+expect(<Outer a="foo"/>).to.not.deep.equal(<Inner a="NotBar"/>)
+expect(<Outer />).to.eql(<Outer />) // .eql is shorthand for .deep.equal
+expect(<Outer a="foo"/>).to.not.eql(<Inner a="NotFoo"/>)
+
+// Shallow Equality tests
+expect(<Outer a="foo"/>).to.equal(<Inner a="foo" />)
+expect(<Outer a="foo"/>).to.not.equal(<Inner a="foo" verifiedJSXProp="x" />)
+expect(<Outer a="foo"/>).to.not.equal(<div>foo</div>) // <Inner /> is not rendered
+
+let WrappedOuter = ({a}) => <div id="outer"><Inner a={a} /></div>
+
+// Deep includes/contains tests
+expect(<WrappedOuter a="foo" />).to.include(<div>foo</div>)
+expect(<WrappedOuter a="foo" />).to.contain(<div>foo</div>)
+expect(<WrappedOuter a="foo" />).to.contain(<Inner a="foo" />)
+expect(<WrappedOuter a="foo" />).to.not.include(<div>Bad Div</div>)
+
+// Shallow includes/contains tests
+expect(<WrappedOuter a="foo" />).to.shallow.contain(<Inner a="foo" />)
+expect(<WrappedOuter a="foo" />).to.not.shallow.include(<div>foo</div>)
 ```
-
 
 ---
 
