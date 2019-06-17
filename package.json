@@ -28,7 +28,7 @@
   "homepage": "https://github.com/developit/preact-jsx-chai",
   "devDependencies": {
     "babel": "^5.8.23",
-    "babel-eslint": "^8.0.0",
+    "babel-eslint": "^10.0.2",
     "chai": "^4.0.1",
     "eslint": "^4.0.0",
     "eslint-plugin-react": "^7.0.0",
