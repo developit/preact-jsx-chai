@@ -1,4 +1,5 @@
 import render from 'preact-render-to-string/jsx';
+import {util} from 'chai';
 
 /** Options for all assertions.
  *	@property {function} isJsx					A test to see if the given parameter is a JSX VNode. Defaults to checking for the existence of a _vnode property
@@ -33,6 +34,26 @@ const INCLUDE_RENDER_OPTS = {
 	pretty: false
 };
 
+const SHALLOW_INCLUDE_OPTS = {
+	...INCLUDE_RENDER_OPTS,
+	shallow: true
+};
+
+const SHALLOW_INCLUDE_OPTS_EXPECTED = {
+	...SHALLOW_INCLUDE_OPTS,
+	renderRootComponent: false
+};
+
+// The options for 'equal' and 'equals' change depending on whether the deep flag has been set with .deep prop
+let getEqualOpts = (obj) => {
+	return util.flag(obj, 'deep') ? [RENDER_OPTS] : [SHALLOW_OPTS, SHALLOW_OPTS_EXPECTED];
+};
+
+// The options for 'includes' and 'contains' change depending on whether 'shallow' flag has been set with .shallow prop
+let getIncludeOpts = (obj) => {
+	return util.flag(obj, 'shallow') ? [SHALLOW_INCLUDE_OPTS, SHALLOW_INCLUDE_OPTS_EXPECTED] : [INCLUDE_RENDER_OPTS, INCLUDE_RENDER_OPTS, RENDER_OPTS];
+};
+
 // create an assertion template string for the given action
 let msg = act => `expected #{act} to ${act} #{exp}`;
 
@@ -51,9 +72,14 @@ let doRender = (jsx, opts) => render(jsx, null, {
 
 // inject a chai assertion if the values being tested are JSX VNodes
 let ifJsx = (fn, opts, optsExpected, displayOpts) => next => function(jsx, ...args) {
+	let resolvedOpts = opts;
+	if (typeof opts === 'function') {
+		([resolvedOpts, optsExpected, displayOpts] = opts(this));
+	}
+
 	if (!isJsx(this._obj)) return next.call(this, jsx, ...args);
-	let actual = doRender(this._obj, opts).trim();
-	let expected = doRender(jsx, optsExpected || opts).trim();
+	let actual = doRender(this._obj, resolvedOpts).trim();
+	let expected = doRender(jsx, optsExpected || resolvedOpts).trim();
 	let diffActual = displayOpts ? doRender(this._obj, displayOpts).trim() : actual;
 	let diffExpected = displayOpts ? doRender(jsx, displayOpts).trim() : expected;
 	return fn(this, { expected, actual, diffActual, diffExpected, jsx });
@@ -68,7 +94,6 @@ let equal = (a, { expected, actual, diffExpected, diffActual }) => a.assert(actu
 // assert that a String contains the given string
 let include = (a, { expected, actual, diffExpected, diffActual }) => a.assert(~actual.indexOf(expected), msg('include'), msg('not include'), diffExpected, diffActual, true);
 
-
 /** Middleware: pass to `chai.use()` to add JSX assertion support. */
 export default function assertJsx({ Assertion }) {
 	if (Assertion.__assertJsxMounted===true) return;
@@ -77,11 +102,22 @@ export default function assertJsx({ Assertion }) {
 	Assertion.overwriteMethod('eql', ifJsx(equal, RENDER_OPTS));
 	Assertion.overwriteMethod('eqls', ifJsx(equal, RENDER_OPTS));
 
-	Assertion.overwriteMethod('equal', ifJsx(equal, SHALLOW_OPTS, SHALLOW_OPTS_EXPECTED));
-	Assertion.overwriteMethod('equals', ifJsx(equal, SHALLOW_OPTS, SHALLOW_OPTS_EXPECTED));
+	Assertion.overwriteMethod('equal', ifJsx(equal, getEqualOpts));
+	Assertion.overwriteMethod('equals', ifJsx(equal, getEqualOpts));
+
+	Assertion.addProperty('shallow', function () {
+		util.flag(this, 'shallow', true);
+	});
+
+	Assertion.addProperty('jsx',  function () {
+		this.assert(
+			isJsx(this._obj),
+			'expected #{this} to be jsx',
+			'expected #{this} to not be jsx');
+	});
 
 	['include', 'includes', 'contain', 'contains'].forEach( method => {
-		Assertion.overwriteChainableMethod(method, ifJsx(include, INCLUDE_RENDER_OPTS, INCLUDE_RENDER_OPTS, RENDER_OPTS), through);
+		Assertion.overwriteChainableMethod(method, ifJsx(include, getIncludeOpts), through);
 	});
 }
 
