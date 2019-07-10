@@ -1,9 +1,8 @@
 import assertJsx, { options } from '../src';
-import { createElement, Component } from 'preact';
+import { h, Component } from 'preact';
 import { expect, default as chai } from 'chai';
 chai.use(assertJsx);
-
-/**@jsx createElement */
+/**@jsx h */
 
 /*eslint-env mocha */
 /*eslint max-nested-callbacks:0*/
@@ -26,12 +25,13 @@ describe('preact-jsx-chai', () => {
 
 			it('not be triggered when JSX is not tested', () => {
 				expect(<jsx />).to.deep.equal({
-					type: 'jsx',
-					props: undefined
+					nodeName: 'jsx',
+					attributes: undefined,
+					children: undefined
 				});
 			});
 
-			it('should sort props', () => {
+			it('should sort attributes', () => {
 				expect(<jsx a="a" b="b" c="c" />).to.eql(<jsx c="c" b="b" a="a" />);
 			});
 		});
