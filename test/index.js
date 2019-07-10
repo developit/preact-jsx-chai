@@ -24,9 +24,8 @@ describe('preact-jsx-chai', () => {
 
 			it('not be triggered when JSX is not tested', () => {
 				expect(<jsx />).to.deep.equal({
-					nodeName: 'jsx',
-					attributes: undefined,
-					children: undefined
+					type: 'jsx',
+					props: undefined
 				});
 			});
 

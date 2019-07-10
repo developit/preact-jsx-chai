@@ -40,7 +40,7 @@ let msg = act => `expected #{act} to ${act} #{exp}`;
 let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj.__isVNode || isVNode(obj)));
 
 // does it look like a vnode?
-let isVNode = obj => obj.hasOwnProperty('nodeName') && obj.hasOwnProperty('attributes') && obj.hasOwnProperty('children') && obj.constructor.name==='VNode';
+let isVNode = obj => obj.hasOwnProperty('type') && obj.hasOwnProperty('props') && obj.hasOwnProperty('key') && obj.hasOwnProperty('ref');
 
 // inject default options and invoke render with no context
 let doRender = (jsx, opts) => render(jsx, null, {
