@@ -38,7 +38,7 @@
     "preact": "^8.1.0"
   },
   "dependencies": {
-    "preact-render-to-string": "^5.0.4"
+    "preact-render-to-string": "^4.1.0"
   },
   "greenkeeper": {
     "ignore": [
