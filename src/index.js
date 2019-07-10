@@ -1,7 +1,7 @@
 import render from 'preact-render-to-string/jsx';
 
 /** Options for all assertions.
- *	@property {function} isJsx					A test to see if the given parameter is a JSX VNode. Defaults to checking for the existence of an __isVNode property
+ *	@property {function} isJsx					A test to see if the given parameter is a JSX VNode. Defaults to checking for the existence of a _vnode property
  */
 export const options = {
 	/* If `false`, props with function values will be omitted from the comparison entirely */
@@ -37,7 +37,7 @@ const INCLUDE_RENDER_OPTS = {
 let msg = act => `expected #{act} to ${act} #{exp}`;
 
 // assert that an object is JSX (or more correctly, a VNode)
-let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj.__isVNode || isVNode(obj)));
+let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj._vnode || isVNode(obj)));
 
 // does it look like a vnode?
 let isVNode = obj => obj.hasOwnProperty('type') && obj.hasOwnProperty('props') && obj.hasOwnProperty('key') && obj.hasOwnProperty('ref');

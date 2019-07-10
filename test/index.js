@@ -1,8 +1,8 @@
 import assertJsx, { options } from '../src';
-import { h, Component } from 'preact';
+import { createElement, Component } from 'preact';
 import { expect, default as chai } from 'chai';
 chai.use(assertJsx);
-/**@jsx h */
+/**@jsx createElement */
 
 /*eslint-env mocha */
 /*eslint max-nested-callbacks:0*/
@@ -29,7 +29,7 @@ describe('preact-jsx-chai', () => {
 				});
 			});
 
-			it('should sort attributes', () => {
+			it('should sort props', () => {
 				expect(<jsx a="a" b="b" c="c" />).to.eql(<jsx c="c" b="b" a="a" />);
 			});
 		});
