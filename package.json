@@ -1,6 +1,6 @@
 {
   "name": "preact-jsx-chai",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Extend Chai with support for asserting JSX equality & contents.",
   "main": "dist/index.js",
   "typings": "src/index.d.ts",
@@ -35,7 +35,7 @@
     "eslint": "^4.0.0",
     "eslint-plugin-react": "^7.0.0",
     "mocha": "^3.0.0",
-    "preact": "^8.1.0"
+    "preact": "^8.4.2"
   },
   "dependencies": {
     "preact-render-to-string": "^4.1.0"
