@@ -40,6 +40,9 @@
   "dependencies": {
     "preact-render-to-string": "^4.1.0"
   },
+  "peerDependencies": {
+    "preact": "<10"
+  },
   "greenkeeper": {
     "ignore": [
       "babel",
