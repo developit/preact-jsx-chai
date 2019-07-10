@@ -35,10 +35,10 @@
     "eslint": "^4.0.0",
     "eslint-plugin-react": "^7.0.0",
     "mocha": "^3.0.0",
-    "preact": "10.0.0-beta.3"
+    "preact": "^8.4.2"
   },
   "dependencies": {
-    "preact-render-to-string": "^5.0.4"
+    "preact-render-to-string": "^4.1.0"
   },
   "greenkeeper": {
     "ignore": [

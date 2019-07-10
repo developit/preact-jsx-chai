@@ -58,10 +58,10 @@ let getIncludeOpts = (obj) => {
 let msg = act => `expected #{act} to ${act} #{exp}`;
 
 // assert that an object is JSX (or more correctly, a VNode)
-let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj._vnode || isVNode(obj)));
+let isJsx = obj => obj && (options.isJsx ? options.isJsx(obj) : (obj.__isVNode || isVNode(obj)));
 
 // does it look like a vnode?
-let isVNode = obj => obj.hasOwnProperty('type') && obj.hasOwnProperty('props') && obj.hasOwnProperty('key') && obj.hasOwnProperty('ref');
+let isVNode = obj => obj.hasOwnProperty('nodeName') && obj.hasOwnProperty('attributes') && Array.isArray(obj.children);
 
 // inject default options and invoke render with no context
 let doRender = (jsx, opts) => render(jsx, null, {
