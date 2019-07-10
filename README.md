@@ -78,7 +78,7 @@ Shallow, JSX only equality/inclusion is checked for: `.equal`, `.shallow.include
 
 ```js
 let Outer = ({a}) => <Inner a={a}/>
-let Innter = ({a}) => <div>{a}</div>
+let Inner = ({a}) => <div>{a}</div>
 
 // JSX tests
 expect(<Outer />).to.be.jsx
