@@ -34,7 +34,7 @@
     "chai": "^4.0.1",
     "eslint": "^4.0.0",
     "eslint-plugin-react": "^7.0.0",
-    "mocha": "^3.0.0",
+    "mocha": "^6.2.1",
     "preact": "10.0.0-beta.3"
   },
   "dependencies": {
